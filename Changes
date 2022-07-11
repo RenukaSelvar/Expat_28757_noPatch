@@ -16,11 +16,17 @@ Release x.x.x xxx xxxxxxxx xx xxxx
                     where XML_ParserCreateNS is used to create the parser
                     (which needs argument "-n" when running xmlwf).
                     Impact is denial of service, or more.
+       #532 #538  CVE-2021-46143 (ZDI-CAN-16157) -- Fix integer overflow
+                    on variable m_groupSize in function doProlog leading
+                    to realloc acting as free.
+                    Impact is denial of service or more.
 
         Special thanks to:
+            An anonymous whitehat
             Tyson Smith
                  and
             GCC Farm Project
+            Trend Micro Zero Day Initiative
 
 Release 2.2.6 Sun August 12 2018
         Bug fixes:
