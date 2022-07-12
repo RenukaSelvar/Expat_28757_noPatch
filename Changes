@@ -30,9 +30,15 @@ Release x.x.x xxx xxxxxxxx xx xxxx
                     - CVE-2022-22826 for function nextScaffoldPart
                     - CVE-2022-22827 for function storeAtts
                     Impact is denial of service or more.
+            #551  CVE-2022-23990 -- Fix unsigned integer overflow in function
+                    doProlog triggered by large content in element type
+                    declarations when there is an element declaration handler
+                    present (from a prior call to XML_SetElementDeclHandler).
+                    Impact is denial of service or more.
 
         Special thanks to:
             An anonymous whitehat
+            Roland Illig
             Tyson Smith
                  and
             GCC Farm Project
