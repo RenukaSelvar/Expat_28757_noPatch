@@ -49,6 +49,13 @@ Release x.x.x xxx xxxxxxxx xx xxxx
                     for when XML_CONTEXT_BYTES is defined to >0 (which is both
                     common and default).
                     Impact is denial of service or more.
+            #562  CVE-2022-25235 -- Passing malformed 2- and 3-byte UTF-8
+                    sequences (e.g. from start tag names) to the XML
+                    processing application on top of Expat can cause
+                    arbitrary damage (e.g. code execution) depending
+                    on how invalid UTF-8 is handled inside the XML
+                    processor; validation was not their job but Expat's.
+                    Exploits with code execution are known to exist.
 
         Special thanks to:
             An anonymous whitehat

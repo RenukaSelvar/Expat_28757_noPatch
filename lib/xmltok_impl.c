@@ -61,7 +61,7 @@
    case BT_LEAD ## n: \
      if (end - ptr < n) \
        return XML_TOK_PARTIAL_CHAR; \
-     if (!IS_NAME_CHAR(enc, ptr, n)) { \
+     if (IS_INVALID_CHAR(enc, ptr, n) || ! IS_NAME_CHAR(enc, ptr, n)) { \
        *nextTokPtr = ptr; \
        return XML_TOK_INVALID; \
      } \
@@ -90,7 +90,7 @@
    case BT_LEAD ## n: \
      if (end - ptr < n) \
        return XML_TOK_PARTIAL_CHAR; \
-     if (!IS_NMSTRT_CHAR(enc, ptr, n)) { \
+     if (IS_INVALID_CHAR(enc, ptr, n) || ! IS_NMSTRT_CHAR(enc, ptr, n)) { \
        *nextTokPtr = ptr; \
        return XML_TOK_INVALID; \
      } \
@@ -1119,6 +1119,10 @@ PREFIX(prologTok)(const ENCODING *enc, const char *ptr, const char *end,
   case BT_LEAD ## n: \
     if (end - ptr < n) \
       return XML_TOK_PARTIAL_CHAR; \
+    if (IS_INVALID_CHAR(enc, ptr, n)) { \
+      *nextTokPtr = ptr; \
+      return XML_TOK_INVALID; \
+    } \
     if (IS_NMSTRT_CHAR(enc, ptr, n)) { \
       ptr += n; \
       tok = XML_TOK_NAME; \
@@ -1239,7 +1243,7 @@ PREFIX(attributeValueTok)(const ENCODING *enc, const char *ptr,
   while (HAS_CHAR(enc, ptr, end)) {
     switch (BYTE_TYPE(enc, ptr)) {
 #define LEAD_CASE(n) \
-    case BT_LEAD ## n: ptr += n; break;
+    case BT_LEAD ## n: ptr += n; /* NOTE: The encoding has already been validated. */ break;
     LEAD_CASE(2) LEAD_CASE(3) LEAD_CASE(4)
 #undef LEAD_CASE
     case BT_AMP:
@@ -1305,7 +1309,7 @@ PREFIX(entityValueTok)(const ENCODING *enc, const char *ptr,
   while (HAS_CHAR(enc, ptr, end)) {
     switch (BYTE_TYPE(enc, ptr)) {
 #define LEAD_CASE(n) \
-    case BT_LEAD ## n: ptr += n; break;
+    case BT_LEAD ## n: ptr += n; /* NOTE: The encoding has already been validated. */ break;
     LEAD_CASE(2) LEAD_CASE(3) LEAD_CASE(4)
 #undef LEAD_CASE
     case BT_AMP:
@@ -1485,7 +1489,7 @@ PREFIX(getAtts)(const ENCODING *enc, const char *ptr,
         state = inName; \
       }
 #define LEAD_CASE(n) \
-    case BT_LEAD ## n: START_NAME ptr += (n - MINBPC(enc)); break;
+    case BT_LEAD ## n: /* NOTE: The encoding has already been validated. */ START_NAME ptr += (n - MINBPC(enc)); break;
     LEAD_CASE(2) LEAD_CASE(3) LEAD_CASE(4)
 #undef LEAD_CASE
     case BT_NONASCII:
@@ -1682,7 +1686,7 @@ PREFIX(nameLength)(const ENCODING *enc, const char *ptr)
   for (;;) {
     switch (BYTE_TYPE(enc, ptr)) {
 #define LEAD_CASE(n) \
-    case BT_LEAD ## n: ptr += n; break;
+    case BT_LEAD ## n: ptr += n; /* NOTE: The encoding has already been validated. */ break;
     LEAD_CASE(2) LEAD_CASE(3) LEAD_CASE(4)
 #undef LEAD_CASE
     case BT_NONASCII:
@@ -1728,7 +1732,7 @@ PREFIX(updatePosition)(const ENCODING *enc,
     switch (BYTE_TYPE(enc, ptr)) {
 #define LEAD_CASE(n) \
     case BT_LEAD ## n: \
-      ptr += n; \
+      ptr += n; /* NOTE: The encoding has already been validated. */ \
       break;
     LEAD_CASE(2) LEAD_CASE(3) LEAD_CASE(4)
 #undef LEAD_CASE
