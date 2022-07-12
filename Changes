@@ -43,6 +43,12 @@ Release x.x.x xxx xxxxxxxx xx xxxx
                     on such unexpectable cases are handled inside the XML
                     processor; validation was not their job but Expat's.
                     Exploits with code execution are known to exist.
+            #550  CVE-2022-23852 -- Fix signed integer overflow
+                    (undefined behavior) in function XML_GetBuffer
+                    (that is also called by function XML_Parse internally)
+                    for when XML_CONTEXT_BYTES is defined to >0 (which is both
+                    common and default).
+                    Impact is denial of service or more.
 
         Special thanks to:
             An anonymous whitehat
@@ -54,6 +60,7 @@ Release x.x.x xxx xxxxxxxx xx xxxx
             Ivan Fratric
                  and
             Google Project Zero
+            Samanta Navarro
 
 Release 2.2.6 Sun August 12 2018
         Bug fixes:
