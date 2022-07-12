@@ -35,6 +35,14 @@ Release x.x.x xxx xxxxxxxx xx xxxx
                     declarations when there is an element declaration handler
                     present (from a prior call to XML_SetElementDeclHandler).
                     Impact is denial of service or more.
+            #561  CVE-2022-25236 -- Passing (one or more) namespace separator
+                    characters in "xmlns[:prefix]" attribute values
+                    made Expat send malformed tag names to the XML
+                    processor on top of Expat which can cause
+                    arbitrary damage (e.g. code execution) depending
+                    on such unexpectable cases are handled inside the XML
+                    processor; validation was not their job but Expat's.
+                    Exploits with code execution are known to exist.
 
         Special thanks to:
             An anonymous whitehat
@@ -43,12 +51,20 @@ Release x.x.x xxx xxxxxxxx xx xxxx
                  and
             GCC Farm Project
             Trend Micro Zero Day Initiative
+            Ivan Fratric
+                 and
+            Google Project Zero
 
 Release 2.2.6 Sun August 12 2018
         Bug fixes:
        #170 #206  Avoid doing arithmetic with NULL pointers in XML_GetBuffer
        #204 #205  Fix 2.2.5 regression with suspend-resume while parsing
                     a document like '<root/>'
+       #572 #577  Relax fix to CVE-2022-25236 (introduced with release 2.4.5)
+                    with regard to all valid URI characters (RFC 3986),
+                    i.e. the following set (excluding whitespace):
+                    ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz
+                    0123456789 % -._~ :/?#[]@ !$&'()*+,;=
 
         Other changes:
        #165 #168  Autotools: Fix docbook-related configure syntax error
@@ -74,6 +90,15 @@ Release 2.2.6 Sun August 12 2018
   #131 #173 #202  Address compiler warnings
   #187 #190 #200  Fix miscellaneous typos
                   Version info bumped from 7:7:6 to 7:8:6
+            #577  Document consequences of namespace separator choices not just
+                    in doc/reference.html but also in header <expat.h>
+            #577  Document Expat's lack of validation of namespace URIs against
+                    RFC 3986, and that the XML 1.0r4 specification doesn't
+                    require Expat to validate namespace URIs, and that Expat
+                    may do more in that regard in future releases.
+                    If you find need for strict RFC 3986 URI validation on
+                    application level today, https://uriparser.github.io/ may
+                    be of interest.
 
         Special thanks to:
             Anton Maklakov
