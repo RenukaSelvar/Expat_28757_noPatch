@@ -59,6 +59,10 @@ Release x.x.x xxx xxxxxxxx xx xxxx
        #629 #640  CVE-2022-40674 -- Heap use-after-free vulnerability in
                     function doContent. Expected impact is denial of service
                     or potentially arbitrary code execution.
+  #616 #649 #650  CVE-2022-43680 -- Fix heap use-after-free after overeager
+                    destruction of a shared DTD in function
+                    XML_ExternalEntityParserCreate in out-of-memory situations
+
 
         Special thanks to:
             An anonymous whitehat

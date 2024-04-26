@@ -976,10 +976,16 @@ parserCreate(const XML_Char *encodingName,
   }
   parser->m_dataBufEnd = parser->m_dataBuf + INIT_DATA_BUF_SIZE;
 
-  if (dtd)
+  if (dtd) {
     parser->m_dtd = dtd;
-  else {
+#ifdef XML_DTD
+    parser->m_isParamEntity = XML_TRUE;
+#endif
+  } else {
     parser->m_dtd = dtdCreate(&parser->m_mem);
+#ifdef XML_DTD
+    parser->m_isParamEntity = XML_FALSE;
+#endif
     if (parser->m_dtd == NULL) {
       FREE(parser, parser->m_dataBuf);
       FREE(parser, parser->m_atts);
@@ -1016,6 +1022,14 @@ parserCreate(const XML_Char *encodingName,
   parserInit(parser, encodingName);
 
   if (encodingName && !parser->m_protocolEncodingName) {
+    if (dtd) {
+      // We need to stop the upcoming call to XML_ParserFree from happily
+      // destroying parser->m_dtd because the DTD is shared with the parent
+      // parser and the only guard that keeps XML_ParserFree from destroying
+      // parser->m_dtd is parser->m_isParamEntity but it will be set to
+      // XML_TRUE only later in XML_ExternalEntityParserCreate (or not at all).
+      parser->m_dtd = NULL;
+    }
     XML_ParserFree(parser);
     return NULL;
   }
@@ -1098,7 +1112,6 @@ parserInit(XML_Parser parser, const XML_Char *encodingName)
   parser->m_parentParser = NULL;
   parser->m_parsingStatus.parsing = XML_INITIALIZED;
 #ifdef XML_DTD
-  parser->m_isParamEntity = XML_FALSE;
   parser->m_useForeignDTD = XML_FALSE;
   parser->m_paramEntityParsing = XML_PARAM_ENTITY_PARSING_NEVER;
 #endif
@@ -1350,7 +1363,6 @@ XML_ExternalEntityParserCreate(XML_Parser oldParser,
        parser->m_dtd with ones that get destroyed with the external PE parser.
        This would leave those prefixes with dangling pointers.
     */
-    parser->m_isParamEntity = XML_TRUE;
     XmlPrologStateInitExternalEntity(&parser->m_prologState);
     parser->m_processor = externalParEntInitProcessor;
   }
@@ -2958,6 +2970,8 @@ doContent(XML_Parser parser,
         len = XmlNameLength(enc, rawName);
         if (len != tag->rawNameLength
             || memcmp(tag->rawName, rawName, len) != 0) {
+          moveToFreeBindingList(parser, tag->bindings);
+          tag->bindings = NULL;
           *eventPP = rawName;
           return XML_ERROR_TAG_MISMATCH;
         }
