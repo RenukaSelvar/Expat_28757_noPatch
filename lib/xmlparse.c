@@ -5783,8 +5783,13 @@ internalEntityProcessor(XML_Parser parser,
   {
     parser->m_processor = contentProcessor;
     /* see externalEntityContentProcessor vs contentProcessor */
-    return doContent(parser, parser->m_parentParser ? 1 : 0, parser->m_encoding, s, end,
+    result = doContent(parser, parser->m_parentParser ? 1 : 0, parser->m_encoding, s, end,
                      nextPtr, (XML_Bool)!parser->m_parsingStatus.finalBuffer);
+    if (result == XML_ERROR_NONE) {
+      if (! storeRawNames(parser))
+        return XML_ERROR_NO_MEMORY;
+    }
+    return result;
   }
 }
 

@@ -56,6 +56,9 @@ Release x.x.x xxx xxxxxxxx xx xxxx
                     on how invalid UTF-8 is handled inside the XML
                     processor; validation was not their job but Expat's.
                     Exploits with code execution are known to exist.
+       #629 #640  CVE-2022-40674 -- Heap use-after-free vulnerability in
+                    function doContent. Expected impact is denial of service
+                    or potentially arbitrary code execution.
 
         Special thanks to:
             An anonymous whitehat
@@ -64,6 +67,8 @@ Release x.x.x xxx xxxxxxxx xx xxxx
                  and
             GCC Farm Project
             Trend Micro Zero Day Initiative
+            Felix Wilhelm
+            Rhodri James
             Ivan Fratric
                  and
             Google Project Zero
