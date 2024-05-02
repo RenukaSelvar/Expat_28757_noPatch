@@ -1,0 +1,6 @@
+CVE-2023-28757: Entering main
+CVE-2023-28757: Entering make_suite
+CVE-2023-28757: Calling accounting test cases
+Expat version: expat_2.2.6
+100%: Checks: 329, Failed: 0
+PASS runtests (exit status: 0)

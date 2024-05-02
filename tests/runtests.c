@@ -45,7 +45,7 @@
 #include <stddef.h>  /* ptrdiff_t */
 #include <ctype.h>
 #include <limits.h>
-
+#include "acc_tests.h"
 
 #if defined(_WIN32) && defined(_MSC_VER) && (_MSC_VER < 1600)
     /* For vs2003/7.1 up to vs2008/9.0; _MSC_VER 1600 is vs2010/10.0 */
@@ -76,7 +76,7 @@
 #include "chardata.h"
 #include "structdata.h"
 #include "internal.h"  /* for UNUSED_P only */
-#include "minicheck.h"
+//#include "minicheck.h"
 #include "memcheck.h"
 #include "siphash.h"
 #include "ascii.h" /* for ASCII_xxx */
@@ -11978,12 +11978,14 @@ END_TEST
 static Suite *
 make_suite(void)
 {
+    printf("CVE-2023-28757: Entering make_suite\n");
     Suite *s = suite_create("basic");
     TCase *tc_basic = tcase_create("basic tests");
     TCase *tc_namespace = tcase_create("XML namespaces");
     TCase *tc_misc = tcase_create("miscellaneous tests");
     TCase *tc_alloc = tcase_create("allocation tests");
     TCase *tc_nsalloc = tcase_create("namespace allocation tests");
+    TCase *tc_accounting = make_accounting_test_case(s);
 
     suite_add_tcase(s, tc_basic);
     tcase_add_checked_fixture(tc_basic, basic_setup, basic_teardown);
@@ -12342,6 +12344,7 @@ make_suite(void)
 int
 main(int argc, char *argv[])
 {
+    printf("CVE-2023-28757: Entering main\n");
     int i, nf;
     int verbosity = CK_NORMAL;
     Suite *s = make_suite();

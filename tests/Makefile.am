@@ -41,6 +41,7 @@ TESTS = runtests runtestspp
 LOG_DRIVER = $(srcdir)/../test-driver-wrapper.sh
 
 libruntests_a_SOURCES = \
+    acc_tests.c \
     chardata.c \
     structdata.c \
     memcheck.c \
@@ -56,6 +57,7 @@ runtests_LDADD = libruntests.a ../lib/libexpat.la
 runtestspp_LDADD = libruntests.a ../lib/libexpat.la
 
 EXTRA_DIST = \
+    acc_tests.h \
     chardata.h \
     structdata.h \
     minicheck.h \

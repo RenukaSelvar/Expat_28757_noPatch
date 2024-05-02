@@ -109,6 +109,15 @@
 # endif
 #endif
 
+/* NOTE BEGIN If you ever patch these defaults to greater values
+              for non-attack XML payload in your environment,
+              please file a bug report with libexpat.  Thank you!
+*/
+#define EXPAT_BILLION_LAUGHS_ATTACK_PROTECTION_MAXIMUM_AMPLIFICATION_DEFAULT   \
+  100.0f
+#define EXPAT_BILLION_LAUGHS_ATTACK_PROTECTION_ACTIVATION_THRESHOLD_DEFAULT    \
+  8388608 // 8 MiB, 2^23
+/* NOTE END */
 
 #ifdef __cplusplus
 extern "C" {
